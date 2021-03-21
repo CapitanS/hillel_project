@@ -13,9 +13,9 @@ services:
       - 5432
     env_file: ./config/.env
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'dev_db'
+      POSTGRES_USER=${DB_USER}
+      POSTGRES_PASSWORD=${DB_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES=shop_db,worehouse_db
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
@@ -34,7 +34,7 @@ services:
       - ./config:/config
     environment:
       DJANGO_DEBUG: 1
-      DATABASE_URL: 'postgresql://postgres:postgres@db:5432/dev_db'
+      DATABASE_URL: 'postgresql://postgres:postgres@db:5432/shop_db'
       DATABASE_HOST: 'db'
     depends_on:
       - db
