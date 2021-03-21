@@ -8,7 +8,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - webnet
+      - shopnet
     expose:
       - 5432
     env_file: ./config/.env
@@ -22,8 +22,8 @@ services:
       timeout: 5s
       retries: 5
 
-  web: &web
-    container_name: web
+  shop: &shop
+    container_name: shop
     env_file: ./config/.env
     build:
       target: development_build
@@ -40,24 +40,42 @@ services:
       - db
     command: sh /runserver.sh
 
-  celery:
-    <<: *web
-    container_name: celery
+  worehouse: &worehouse
+    container_name: worehouse
+    env_file: ./config/.env
+    build:
+      target: development_build
+      args:
+        DJANGO_ENV: 'dev'
+    volumes:
+      - ./backend:/code
+      - ./config:/config
     environment:
-      C_FORCE_ROOT: 'true'
+      DJANGO_DEBUG: 1
       DATABASE_URL: 'postgresql://postgres:postgres@db:5432/dev_db'
       DATABASE_HOST: 'db'
-      DATABASE_PORT: '5432'
-      REDIS_URL: 'redis://redis:6379/0'
-      REDIS_CACHE: 'redis:6379'
-      AMQP_URL: 'amqp://rabbitmq:5672'
-      CHECK_WEB: 'true'
-      WEB_HOST: 'web'
-      WEB_PORT: '8000'
     depends_on:
-      - redis
       - db
-    command: celery -A core worker -B -l INFO
+    command: sh /runserver.sh
+
+#  celery:
+#    <<: *shop
+#    container_name: celery
+#    environment:
+#      C_FORCE_ROOT: 'true'
+#      DATABASE_URL: 'postgresql://postgres:postgres@db:5432/dev_db'
+#      DATABASE_HOST: 'db'
+#      DATABASE_PORT: '5432'
+#      REDIS_URL: 'redis://redis:6379/0'
+#      REDIS_CACHE: 'redis:6379'
+#      AMQP_URL: 'amqp://rabbitmq:5672'
+#      CHECK_WEB: 'true'
+#      WEB_HOST: 'web'
+#      WEB_PORT: '8000'
+#    depends_on:
+#      - redis
+#      - db
+#    command: celery -A core worker -B -l INFO
 
 #  flower:
 #    <<: *web
@@ -90,37 +108,37 @@ services:
 #      - db
 #    command: flower -A core --port=5555
 
-  flower:
-    image: mher/flower:0.9.5
-    container_name: flower
-    networks:
-      - webnet
-      - nginx_network
-    expose:
-      - 5555
-    depends_on:
-      - celery
-      - redis
-      - db
-    command: [ "--app core", "--port=5555", "--url_prefix=flower", "--broker=amqp://rabbitmq:5672", "--broker_api=amqp://rabbitmq:15672" ]
-
-  mailhog:
-    container_name: mailhog
-    image: mailhog/mailhog:latest
-    command: [ "-smtp-bind-addr", "0.0.0.0:25" ]
-    user: root
-    restart: on-failure
-    networks:
-      - webnet
-      - nginx_network
-    expose:
-      - 25
-      - 8025
-    healthcheck:
-      test: [ "CMD", "echo", "|", "telnet", "127.0.0.1 25" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#  flower:
+#    image: mher/flower:0.9.5
+#    container_name: flower
+#    networks:
+#      - webnet
+#      - nginx_network
+#    expose:
+#      - 5555
+#    depends_on:
+#      - celery
+#      - redis
+#      - db
+#    command: [ "--app core", "--port=5555", "--url_prefix=flower", "--broker=amqp://rabbitmq:5672", "--broker_api=amqp://rabbitmq:15672" ]
+#
+#  mailhog:
+#    container_name: mailhog
+#    image: mailhog/mailhog:latest
+#    command: [ "-smtp-bind-addr", "0.0.0.0:25" ]
+#    user: root
+#    restart: on-failure
+#    networks:
+#      - webnet
+#      - nginx_network
+#    expose:
+#      - 25
+#      - 8025
+#    healthcheck:
+#      test: [ "CMD", "echo", "|", "telnet", "127.0.0.1 25" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
 
   nginx:
     container_name: nginx
@@ -129,9 +147,9 @@ services:
     ports:
       - 8025:8025
       - 5555:5555
-    depends_on:
-      - mailhog
-      - flower
+#    depends_on:
+#      - mailhog
+#      - flower
 
 volumes:
   db-data:

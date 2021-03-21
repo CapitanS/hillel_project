@@ -31,8 +31,7 @@ RUN apt-get -y install \
     libgeos-dev
 
 # Install python dependencies
-RUN pip install -U --no-cache-dir pip \
-    && pip install --no-cache-dir pipenv
+RUN pip install -U --no-cache-dir pip
 
 # Copy only requirements, to cache them in docker layer:
 WORKDIR /pysetup
