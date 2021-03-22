@@ -11,14 +11,14 @@ services:
       - shopnet
       - nginx_network
     expose:
-      - 8000:8000
+      - 8000
     environment:
       DATABASE_PORT: '5432'
     env_file:
       - ./config/.env_shop
     restart: on-failure
-    depends_on:
-      - redis
+#    depends_on:
+#      - redis
     command: sh /runserver.sh
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://0.0.0.0:8000/admin/login/"]
@@ -36,14 +36,14 @@ services:
       - shopnet
       - nginx_network
     expose:
-      - 8000:8001
+      - 8000
     environment:
       DATABASE_PORT: '5432'
     env_file:
       - ./config/.env_worehouse
     restart: on-failure
-    depends_on:
-      - redis
+#    depends_on:
+#      - redis
     command: sh /runserver.sh
     healthcheck:
       test: [ "CMD", "curl", "--fail", "http://0.0.0.0:8001/admin/login/" ]
@@ -130,6 +130,6 @@ networks:
   shopnet:
   nginx_network:
 
-volumes:
+#volumes:
 #  rabbitmq_data:
 #  redis:

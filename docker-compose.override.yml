@@ -11,11 +11,11 @@ services:
       - shopnet
     expose:
       - 5432
-    env_file: ./config/.env
+    env_file: ./config/.env_db
     environment:
-      POSTGRES_USER=${DB_USER}
-      POSTGRES_PASSWORD=${DB_PASSWORD}
-      POSTGRES_MULTIPLE_DATABASES=shop_db,worehouse_db
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+#      POSTGRES_MULTIPLE_DATABASES: 'shop_db', 'worehouse_db'
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
@@ -24,13 +24,13 @@ services:
 
   shop: &shop
     container_name: shop
-    env_file: ./config/.env
+    env_file: ./config/.env_shop
     build:
       target: development_build
       args:
         DJANGO_ENV: 'dev'
     volumes:
-      - ./backend:/code
+      - ./shop:/code
       - ./config:/config
     environment:
       DJANGO_DEBUG: 1
@@ -42,13 +42,13 @@ services:
 
   worehouse: &worehouse
     container_name: worehouse
-    env_file: ./config/.env
+    env_file: ./config/.env_worehouse
     build:
       target: development_build
       args:
         DJANGO_ENV: 'dev'
     volumes:
-      - ./backend:/code
+      - ./worehouse:/code
       - ./config:/config
     environment:
       DJANGO_DEBUG: 1
