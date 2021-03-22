@@ -5,7 +5,7 @@ services:
   shop: &shop
     container_name: shop
     build:
-      context: ./shop
+      context: .
       dockerfile: ./docker/shop/Dockerfile
     networks:
       - shopnet
@@ -30,7 +30,7 @@ services:
   warehouse: &warehouse
     container_name: warehouse
     build:
-      context: ./warehouse
+      context: .
       dockerfile: ./docker/warehouse/Dockerfile
     networks:
       - shopnet

@@ -145,6 +145,8 @@ services:
     build:
       target: development_build
     ports:
+      - 8000:8000
+      - 8001:8001
       - 8025:8025
       - 5555:5555
 #    depends_on:

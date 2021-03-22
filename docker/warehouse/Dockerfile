@@ -42,7 +42,7 @@ RUN pip install -U --no-cache-dir pip
 #RUN pipenv install --dev --system
 
 #!!!
-COPY ./requirements.txt .
+COPY ./warehouse/requirements.txt .
 RUN pip install -r requirements.txt
 
 FROM python_base as development_build
