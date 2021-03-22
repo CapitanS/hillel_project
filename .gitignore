@@ -146,5 +146,5 @@ staticfiles/
 # my_test
 test.py
 /config/.env_shop
-/config/.env_worehouse
+/config/.env_warehouse
 /config/.env_db

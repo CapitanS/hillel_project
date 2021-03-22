@@ -27,11 +27,11 @@ services:
       retries: 2
 
 
-  worehouse: &worehouse
-    container_name: worehouse
+  warehouse: &warehouse
+    container_name: warehouse
     build:
-      context: ./worehouse
-      dockerfile: ./docker/worehouse/Dockerfile
+      context: ./warehouse
+      dockerfile: ./docker/warehouse/Dockerfile
     networks:
       - shopnet
       - nginx_network
@@ -40,7 +40,7 @@ services:
     environment:
       DATABASE_PORT: '5432'
     env_file:
-      - ./config/.env_worehouse
+      - ./config/.env_warehouse
     restart: on-failure
 #    depends_on:
 #      - redis
@@ -64,7 +64,7 @@ services:
       - 80:80
     depends_on:
       - shop
-      - worehouse
+      - warehouse
     healthcheck:
       test: ["CMD-SHELL", "ps ax", "|" ,"grep -v grep", "|" ,"grep nginx",  "||", "exit 1"]
       interval: 30s

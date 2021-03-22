@@ -15,7 +15,7 @@ services:
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
-#      POSTGRES_MULTIPLE_DATABASES: 'shop_db', 'worehouse_db'
+#      POSTGRES_MULTIPLE_DATABASES: 'shop_db', 'warehouse_db'
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s
@@ -40,15 +40,15 @@ services:
       - db
     command: sh /runserver.sh
 
-  worehouse: &worehouse
-    container_name: worehouse
-    env_file: ./config/.env_worehouse
+  warehouse: &warehouse
+    container_name: warehouse
+    env_file: ./config/.env_warehouse
     build:
       target: development_build
       args:
         DJANGO_ENV: 'dev'
     volumes:
-      - ./worehouse:/code
+      - ./warehouse:/code
       - ./config:/config
     environment:
       DJANGO_DEBUG: 1
