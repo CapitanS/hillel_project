@@ -26,9 +26,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", 'b+9qqhwn^apm_a#u&(m@+%ydw+jio-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,12 +78,18 @@ WSGI_APPLICATION = 'warehouse.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE"),
-        "NAME": os.environ.get("SQL_DATABASE_warehouse"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+        # "ENGINE": os.environ.get("SQL_ENGINE"),
+        # "NAME": os.environ.get("SQL_DATABASE"),
+        # "USER": os.environ.get("SQL_USER", "user"),
+        # "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        # "HOST": os.environ.get("SQL_HOST", "localhost"),
+        # "PORT": os.environ.get("SQL_PORT", "5432"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'warehouse_db',
+        'USER': 'user',
+        'PASSWORD': 'password',
+        'HOST': '172.20.0.2',
+        'PORT': '5432',
     }
 }
 
