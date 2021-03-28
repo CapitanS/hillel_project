@@ -142,23 +142,23 @@ services:
 #      - db
 #    command: [ "--app core", "--port=5555", "--url_prefix=flower", "--broker=amqp://rabbitmq:5672", "--broker_api=amqp://rabbitmq:15672" ]
 #
-#  mailhog:
-#    container_name: mailhog
-#    image: mailhog/mailhog:latest
-#    command: [ "-smtp-bind-addr", "0.0.0.0:25" ]
-#    user: root
-#    restart: on-failure
-#    networks:
-#      - webnet
-#      - nginx_network
-#    expose:
-#      - 25
-#      - 8025
-#    healthcheck:
-#      test: [ "CMD", "echo", "|", "telnet", "127.0.0.1 25" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    command: [ "-smtp-bind-addr", "0.0.0.0:25" ]
+    user: root
+    restart: on-failure
+    networks:
+      - shopnet
+      - nginx_network
+    expose:
+      - 25
+      - 8025
+    healthcheck:
+      test: [ "CMD", "echo", "|", "telnet", "127.0.0.1 25" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   nginx:
     container_name: nginx
@@ -167,8 +167,8 @@ services:
     ports:
       - 8025:8025
       - 5555:5555
-#    depends_on:
-#      - mailhog
+    depends_on:
+      - mailhog
 #      - flower
 
 volumes:
