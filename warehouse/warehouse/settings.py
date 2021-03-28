@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'warehouse_db',
         'USER': 'user',
         'PASSWORD': 'password',
-        'HOST': '172.20.0.2',
+        'HOST': '172.20.0.3',
         'PORT': '5432',
     }
 }
